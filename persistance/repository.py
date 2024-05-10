@@ -13,7 +13,9 @@ class Repository:
 
     async def write_to_db(self, model):
         connection = await self.postgres.get_connection()
-        async_session = sessionmaker(connection, expire_on_commit=False, class_=AsyncSession)
+        async_session = sessionmaker(
+            connection, expire_on_commit=False, class_=AsyncSession
+        )
         async with async_session() as session:
             try:
                 async with session.begin():
@@ -27,11 +29,18 @@ class Repository:
         self, start_date: date = date.today(), end_date: date = date.today()
     ):
         connection = await self.postgres.get_connection()
-        async_session = sessionmaker(connection, expire_on_commit=False, class_=AsyncSession)
+        async_session = sessionmaker(
+            connection, expire_on_commit=False, class_=AsyncSession
+        )
         async with async_session() as session:
             try:
                 async with session.begin():
-                    row = await session.execute(select(FlightModel).filter(FlightModel.depdate >= start_date, FlightModel.depdate <= end_date))
+                    row = await session.execute(
+                        select(FlightModel).filter(
+                            FlightModel.depdate >= start_date,
+                            FlightModel.depdate <= end_date,
+                        )
+                    )
                     models = row.fetchone()
                     return models[0]
             except Exception as ex:
