@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "s7-test"
+version = "0.1.0"
+description = ""
+authors = ["oyzybareva <oyzybareva@gmail.com>"]
+readme = "README.md"
+packages = [{include = "s7_test"}]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+sqlalchemy = "2.0.30"
+fastapi = "0.111.0"
+pydantic-settings = "2.2.1"
+sqlalchemy-utils = "0.41.2"
+apscheduler = "3.10.4"
+asyncpg = "0.29.0"
+ruff = "0.4.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
