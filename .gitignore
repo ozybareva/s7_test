@@ -3,7 +3,7 @@ venv/
 *.egg-info/
 .pytest_cache/
 .idea/
-.env*
+.env
 build/
 dist/*
 .coverage/*
