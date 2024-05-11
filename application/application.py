@@ -18,36 +18,37 @@ class App:
         logging.info("Initializing application")
 
         self.app = FastAPI()
-        self.loop = asyncio.get_event_loop()
+        self._loop = asyncio.get_event_loop()
         self.settings = Settings()
-        self.server = self.init_server(self.loop)
+        self._server = self.init_server(self._loop)
         self._postgres_connector = PostgresConnector(self.settings)
         self._repository = Repository(self._postgres_connector)
-        self.file_processor = FileProcessor(self.settings, self._repository)
-        self.scheduler = self._get_scheduler()
+        self._file_processor = FileProcessor(self.settings, self._repository)
+        self._scheduler = self._get_scheduler()
 
     def start(self):
         self.add_routes()
 
         try:
             logging.info("Start application")
+            self._loop.run_until_complete(self._postgres_connector.run_startup())
             tasks = asyncio.gather(
-                self.scheduler.schedule_task_periodically(),
-                self.server.serve(),
+                self._scheduler.schedule_task_periodically(),
+                self._server.serve(),
             )
-            self.loop.run_until_complete(tasks)
+            self._loop.run_until_complete(tasks)
 
-            self.loop.run_forever()
+            self._loop.run_forever()
         except KeyboardInterrupt:
             pass
-        except Exception:
-            logging.error("Unexpected error")
+        except Exception as ex:
+            logging.error(f"Unexpected error: {ex}")
         finally:
-            self.loop.close()
+            self._loop.run_until_complete(self._postgres_connector.run_shutdown())
+            self._loop.close()
 
     def init_server(self, loop):
         config = uvicorn.Config(app=self.app, loop=loop, host="0.0.0.0")
-
         return uvicorn.Server(config)
 
     def add_routes(self):
@@ -57,6 +58,6 @@ class App:
 
     def _get_scheduler(self) -> Scheduler:
         scheduler = Scheduler()
-        process_file_job = ProcessFileJob(self.settings, self.file_processor)
+        process_file_job = ProcessFileJob(self.settings, self._file_processor)
         scheduler.register(process_file_job)
         return scheduler
