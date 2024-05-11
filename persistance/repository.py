@@ -4,14 +4,14 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
 from persistance.postgres_connection import PostgresConnector
-from persistance.models import FlightModel
+from persistance.bd_models import FlightModel
 
 
 class Repository:
     def __init__(self, postgres: PostgresConnector):
         self.postgres = postgres
 
-    async def write_to_db(self, model):
+    async def write_to_db(self, model) -> None:
         connection = await self.postgres.get_connection()
         async_session = sessionmaker(
             connection, expire_on_commit=False, class_=AsyncSession
@@ -27,7 +27,7 @@ class Repository:
 
     async def get_flights_by_date(
         self, start_date: date = date.today(), end_date: date = date.today()
-    ):
+    ) -> list:
         connection = await self.postgres.get_connection()
         async_session = sessionmaker(
             connection, expire_on_commit=False, class_=AsyncSession
@@ -41,7 +41,7 @@ class Repository:
                             FlightModel.depdate <= end_date,
                         )
                     )
-                    models = row.fetchone()
-                    return models[0]
+                    models = row.fetchall()
+                    return models
             except Exception as ex:
                 logging.error(f"Error selecting from db: {ex}")

@@ -1,9 +1,9 @@
 import logging
 
-from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine
 from sqlalchemy_utils import database_exists, create_database
 
-from persistance.models import Base
+from persistance.bd_models import Base
 
 from settings import Settings
 
@@ -19,11 +19,11 @@ class PostgresConnector:
             self.connection = create_async_engine(self.postgres_dsn)
         return self.connection
 
-    async def declare_base(self):
+    async def declare_base(self) -> None:
         engine = await self.get_connection()
         async with engine.begin() as conn:
             if not conn.run_sync(database_exists, engine.url):
-                await conn.run_sync(create_database(engine.url))
+                await conn.run_sync(create_database, engine.url)
                 logging.info("Database created")
             await conn.run_sync(Base.metadata.create_all)
 

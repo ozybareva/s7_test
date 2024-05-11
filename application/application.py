@@ -3,6 +3,7 @@ import logging
 import uvicorn
 from fastapi import FastAPI
 
+from application.routers import FlightDataRouter
 from logic.file_processor import FileProcessor
 from persistance.postgres_connection import PostgresConnector
 from persistance.repository import Repository
@@ -25,6 +26,7 @@ class App:
         self._repository = Repository(self._postgres_connector)
         self._file_processor = FileProcessor(self.settings, self._repository)
         self._scheduler = self._get_scheduler()
+        self._router = FlightDataRouter(self._file_processor)
 
     def start(self):
         self.add_routes()
@@ -51,9 +53,9 @@ class App:
         config = uvicorn.Config(app=self.app, loop=loop, host="0.0.0.0")
         return uvicorn.Server(config)
 
-    def add_routes(self):
+    def add_routes(self) -> None:
         self.app.add_api_route(
-            "/get_flights", self._repository.get_flights_by_date, methods=["POST"]
+            "/get_flights", self._router.get_flights_by_date, methods=["POST"]
         )
 
     def _get_scheduler(self) -> Scheduler:
