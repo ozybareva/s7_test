@@ -3,13 +3,13 @@ import logging
 import uvicorn
 from fastapi import FastAPI
 
-from application.routers import FlightDataRouter
-from logic.file_processor import FileProcessor
-from persistance.postgres_connection import PostgresConnector
-from persistance.repository import Repository
-from scheduler.scheduler import Scheduler
-from scheduler.job_process_file import ProcessFileJob
-from settings import Settings
+from s7_test.application.routers import FlightDataRouter
+from s7_test.logic.file_processor import FileProcessor
+from s7_test.persistance.postgres_connection import PostgresConnector
+from s7_test.persistance.repository import Repository
+from s7_test.scheduler.scheduler import Scheduler
+from s7_test.scheduler.job_process_file import ProcessFileJob
+from s7_test.settings import Settings
 
 logging.basicConfig(level=logging.DEBUG)
 

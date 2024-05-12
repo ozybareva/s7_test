@@ -4,9 +4,9 @@ from asyncpg.exceptions import InvalidCatalogNameError
 
 from sqlalchemy.ext.asyncio import create_async_engine
 
-from persistance.bd_models import Base
+from s7_test.persistance.bd_models import Base
 
-from settings import Settings
+from s7_test.settings import Settings
 
 
 class PostgresConnector:

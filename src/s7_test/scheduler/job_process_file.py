@@ -1,5 +1,5 @@
-from logic.file_processor import FileProcessor
-from settings import Settings
+from s7_test.logic.file_processor import FileProcessor
+from s7_test.settings import Settings
 
 
 class ProcessFileJob:

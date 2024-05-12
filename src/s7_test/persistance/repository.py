@@ -3,8 +3,8 @@ from datetime import date
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
-from persistance.postgres_connection import PostgresConnector
-from persistance.bd_models import FlightModel
+from s7_test.persistance.postgres_connection import PostgresConnector
+from s7_test.persistance.bd_models import FlightModel
 
 
 class Repository:

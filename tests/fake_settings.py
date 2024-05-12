@@ -1,9 +1,8 @@
 import os
-from ..settings import Settings
+from s7_test.settings import Settings
 
 
 class FakeSettings(Settings):
-    app_title_application: str = 'TEST CAMS service'
 
     class Config:
         if os.path.isfile('.env-test'):

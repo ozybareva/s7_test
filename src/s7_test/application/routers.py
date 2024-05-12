@@ -2,7 +2,7 @@ import logging
 
 from datetime import date
 from fastapi.responses import JSONResponse
-from logic.file_processor import FileProcessor
+from s7_test.logic.file_processor import FileProcessor
 
 
 class FlightDataRouter:

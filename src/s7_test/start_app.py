@@ -1,5 +1,5 @@
 import uvicorn
-from application.application import App
+from s7_test.application.application import App
 
 app = App()
 
