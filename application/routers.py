@@ -11,13 +11,10 @@ class FlightDataRouter:
 
     async def get_flights_by_date(
         self,
-        start_date: date = date.today(),
-        end_date: date = date.today(),
+        flight_date: date = date.today(),
     ):
         try:
-            flights = await self.file_processor.get_flights_by_date(
-                start_date, end_date
-            )
+            flights = await self.file_processor.get_flights_by_date(flight_date)
             return JSONResponse(flights.dict())
         except Exception as exc:
             logging.error(f"Error {exc}")

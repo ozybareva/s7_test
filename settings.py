@@ -17,7 +17,7 @@ class Settings(BaseSettings):
 
     @property
     def postgres_dsn(self) -> str:
-        return f"postgresql+asyncpg://{self.postgres_user}:{self.postgres_password}@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
+        return f"postgresql+asyncpg://{self.postgres_user}:{self.postgres_password}@{self.postgres_host}:{self.postgres_port}"
 
     class Config:
         config_file_name = f"{base_dir}/.env"

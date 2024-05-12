@@ -81,10 +81,8 @@ class FileProcessor:
             )
             logging.info(f"File {filename} moved to {self.ok_folder}")
 
-    async def get_flights_by_date(
-        self, start_date: date, end_date: date
-    ) -> FlightResponseModel:
-        flight_models = await self._repository.get_flights_by_date(start_date, end_date)
+    async def get_flights_by_date(self, flight_date: date) -> FlightResponseModel:
+        flight_models = await self._repository.get_flights_by_date(flight_date)
         flight_response = FlightResponseModel(
             flights=[
                 FlightModel(

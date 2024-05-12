@@ -25,9 +25,7 @@ class Repository:
             except Exception as ex:
                 logging.error(f"Error writing to db: {ex}")
 
-    async def get_flights_by_date(
-        self, start_date: date = date.today(), end_date: date = date.today()
-    ) -> list:
+    async def get_flights_by_date(self, flight_date: date,) -> list:
         connection = await self.postgres.get_connection()
         async_session = sessionmaker(
             connection, expire_on_commit=False, class_=AsyncSession
@@ -37,8 +35,7 @@ class Repository:
                 async with session.begin():
                     row = await session.execute(
                         select(FlightModel).filter(
-                            FlightModel.depdate >= start_date,
-                            FlightModel.depdate <= end_date,
+                            FlightModel.depdate == flight_date,
                         )
                     )
                     models = row.fetchall()
