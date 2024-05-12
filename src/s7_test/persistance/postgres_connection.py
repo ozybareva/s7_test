@@ -19,17 +19,16 @@ class PostgresConnector:
 
     async def get_connection(self):
         if not self.connection:
-            self.connection = create_async_engine(f'{self.postgres_dsn}/{self.postgres_db}')
+            self.connection = create_async_engine(
+                f"{self.postgres_dsn}/{self.postgres_db}"
+            )
         return self.connection
 
     async def declare_base(self) -> None:
         try:
             await asyncpg.connect(user=self.postgres_user, database=self.postgres_db)
         except InvalidCatalogNameError:
-            sys_conn = await asyncpg.connect(
-                database='postgres',
-                user='postgres'
-            )
+            sys_conn = await asyncpg.connect(database="postgres", user="postgres")
             await sys_conn.execute(
                 f'CREATE DATABASE "{self.postgres_db}" OWNER "{self.postgres_user}"'
             )

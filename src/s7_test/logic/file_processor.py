@@ -7,7 +7,8 @@ from datetime import datetime, date
 from pathlib import Path
 
 from s7_test.persistance.repository import Repository
-from s7_test.application.api_models import FlightResponseModel, FlightModel
+from s7_test.persistance.bd_models import FlightPostgresModel
+from s7_test.application.api_models import FlightResponseModel, FlightApiModel
 from s7_test.settings import Settings
 
 
@@ -50,14 +51,16 @@ class FileProcessor:
         try:
             return filename[:-4].split("_")
         except ValueError:
-            logging.error(f'Invalid filename {filename}')
+            logging.error(f"Invalid filename {filename}")
             raise
 
     async def process_flight_info(self) -> None:
         logging.info("Start processing flight info")
         try:
             for filename in os.listdir(self.input_folder):
-                flight_date, flight_number, airport_name = self.get_flight_info(filename)
+                flight_date, flight_number, airport_name = self.get_flight_info(
+                    filename
+                )
                 flight_date = self.format_ymd_date(flight_date)
                 result_json = {
                     "flt": flight_number,
@@ -66,7 +69,7 @@ class FileProcessor:
                     "prl": [],
                 }
                 await self._repository.write_to_db(
-                    FlightModel(
+                    FlightPostgresModel(
                         file_name=filename,
                         flt=int(flight_number),
                         depdate=datetime.strptime(flight_date, "%Y-%m-%d"),
@@ -80,12 +83,10 @@ class FileProcessor:
                 self.move_input_file(filename)
 
         except Exception as ex:
-            logging.error(f'Error processing file with filename {filename}: {ex}')
+            logging.error(f"Error processing file with filename {filename}: {ex}")
 
     def move_input_file(self, filename) -> None:
-        shutil.move(
-            f"{self.input_folder}/{filename}", f"{self.ok_folder}/{filename}"
-        )
+        shutil.move(f"{self.input_folder}/{filename}", f"{self.ok_folder}/{filename}")
         logging.info(f"File {filename} moved to {self.ok_folder}")
 
     def save_json_file(self, filename, file_data):
@@ -97,10 +98,10 @@ class FileProcessor:
         flight_models = await self._repository.get_flights_by_date(flight_date)
         flight_response = FlightResponseModel(
             flights=[
-                FlightModel(
+                FlightApiModel(
                     file_name=model[0].file_name,
                     flt=model[0].flt,
-                    depdate=model[0].depdate.strftime("%Y-/%m/-%d"),
+                    depdate=model[0].depdate.strftime("%Y-%m-%d"),
                     dep=model[0].dep,
                 )
                 for model in flight_models

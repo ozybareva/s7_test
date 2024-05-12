@@ -1,5 +1,6 @@
 from pytest import fixture
 
+from s7_test.application.routers import FlightDataRouter
 from s7_test.logic.file_processor import FileProcessor
 from s7_test.persistance.postgres_connection import PostgresConnector
 from s7_test.persistance.repository import Repository
@@ -36,3 +37,8 @@ def scheduler():
 @fixture()
 def process_file_job(settings, file_processor):
     return ProcessFileJob(settings, file_processor)
+
+
+@fixture()
+def flight_data_router(file_processor):
+    return FlightDataRouter(file_processor)

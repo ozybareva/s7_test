@@ -2,7 +2,7 @@ from datetime import date
 from pydantic import BaseModel
 
 
-class FlightModel(BaseModel):
+class FlightApiModel(BaseModel):
     file_name: str
     flt: int
     depdate: str
@@ -10,4 +10,4 @@ class FlightModel(BaseModel):
 
 
 class FlightResponseModel(BaseModel):
-    flights: list[FlightModel]
+    flights: list[FlightApiModel]

@@ -6,7 +6,7 @@ class Base(DeclarativeBase):
     pass
 
 
-class FlightModel(Base):
+class FlightPostgresModel(Base):
     __tablename__ = "flight"
     id = Column(Integer, primary_key=True)
     file_name = Column("file_name", Text)
